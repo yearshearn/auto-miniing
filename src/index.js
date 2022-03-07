@@ -24,7 +24,7 @@ if(!COOKIE) {
       message(JSON.stringify(dipResult))
       message(`抽奖成功，获得：${drawResult.lottery_name}; 获取幸运点${dipResult.dip_value}, 当前幸运点${dipResult.total_value}`);
     } catch (e) {
-      message(`有异常，请手动操作,${e}`);
+      message(`有异常，请手动操作,JSON.stringify(e));
     }
   }
   junJin().then(() => {});
