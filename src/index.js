@@ -16,7 +16,7 @@ if(!COOKIE) {
 } else {
   async function junJin() {
     try {
-      // 先执行签到、抽奖以及沾喜气
+      // 先执行签到、抽奖以及沾喜
       await jueJinApi.checkIn(); // 抽奖一次
       const drawResult = await jueJinApi.drawApi();
       const dipParams = { lottery_history_id: '7052109119238438925' };
