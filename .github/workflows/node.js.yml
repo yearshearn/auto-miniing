@@ -15,7 +15,12 @@ jobs:
       # 切换分支
       - name: Checkout
         uses: actions/checkout@master
-    
+        # gitcheckout
+      - name: git config
+        run: |
+          git config --global --add safe.directory /github/workspace
+        env:
+          CI: true
       # 下载 git submodule
       - uses: srt32/git-actions@v0.0.3
         with:
