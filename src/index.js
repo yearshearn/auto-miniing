@@ -66,6 +66,7 @@ if (!(COOKIE && TOKEN)) {
    * 循环游戏
    */
   async function playGame() {
+    console.log('game start')
     try {
       // 开始
       const startTime = new Date().getTime();
@@ -110,7 +111,7 @@ if (!(COOKIE && TOKEN)) {
         }
       });
     } catch(e) {
-      console.log(e);
+      console.log('game error',e);
       await sleep(3000);
       // 结束
       const overTime = +new Date().getTime();
