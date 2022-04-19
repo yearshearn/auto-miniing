@@ -54,7 +54,10 @@ if (!(COOKIE && TOKEN)) {
   }
   getInfo().then(() => {
     if (todayDiamond < todayLimitDiamond) {
+      console.log('执行了playgame1')
       playGame().then(() => {});
+    }else{
+      console.log('没有执行playGame1')
     }
   });
 
@@ -121,7 +124,9 @@ if (!(COOKIE && TOKEN)) {
       await miningApi.over(overParams, juejinUid, overTime);
       await sleep(3000);
       await getInfo().then((res) => {
+         
         if (todayDiamond < todayLimitDiamond) {
+           console.log('game start22222')
           playGame()
         } else {
           message(`今日限制矿石${res.userInfo.todayLimitDiamond},已获取矿石${res.userInfo.todayDiamond}`)
