@@ -16,11 +16,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
         # gitcheckout
-      # 使用 node:14
-      - name: 使用 Node.js 14
+      # 使用 node:16
+      - name: 使用 Node.js 16
         uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: 16
 
       # npm install
       - name: npm install
