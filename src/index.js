@@ -1,41 +1,47 @@
 /**
  * Created by huangqihong on 2022/01/07 23:35:00
  */
-const dotEnv = require('dotenv');
-dotEnv.config('./env');
+const dotEnv = require("dotenv");
+dotEnv.config("./env");
 
-const { COOKIE, TOKEN } =  require('./utils/config.js');
-const message =  require('./utils/message');
-const jueJinApi = require('./api/juejin')();
-const miningApi = require('./api/mining')();
-const jwt = require('jsonwebtoken');
-const firstData = require('./utils/first');
+const { COOKIE, TOKEN } = require("./utils/config.js");
+const message = require("./utils/message");
+const jueJinApi = require("./api/juejin")();
+const miningApi = require("./api/mining")();
+const jwt = require("jsonwebtoken");
+const firstData = require("./utils/first");
 
-if(!COOKIE) {
-  message('获取不到cookie，请检查设置')
+if (!COOKIE) {
+  message("获取不到cookie，请检查设置");
 } else {
   async function junJin() {
     try {
       // 先执行签到、抽奖以及沾喜
       await jueJinApi.checkIn(); // 抽奖一次
       const drawResult = await jueJinApi.drawApi();
-      const dipParams = { lottery_history_id: '7052109119238438925' };
+      const dipParams = { lottery_history_id: "7052109119238438925" };
       const dipResult = await jueJinApi.dipLucky(dipParams);
-      message(JSON.stringify(dipResult))
-      message(`抽奖成功，获得：${drawResult.lottery_name}; 获取幸运点${dipResult.dip_value}, 当前幸运点${dipResult.total_value}`);
+      message(JSON.stringify(dipResult));
+      message(
+        `抽奖成功，获得：${drawResult.lottery_name}; 获取幸运点${dipResult.dip_value}, 当前幸运点${dipResult.total_value}`
+      );
     } catch (e) {
-        message(`有异常，请手动操作!!!,${JSON.stringify(e)}`);
+      message(`有异常，请手动操作!!!,${JSON.stringify(e)}`);
     }
   }
-  junJin().then(() => {});
+  junJin()
+    .then(() => {})
+    .catch((e) => {
+      console.log("1222error======", e);
+    });
 }
 
-let juejinUid = '';
+let juejinUid = "";
 
 if (!(COOKIE && TOKEN)) {
-  message('获取不到游戏必须得COOKIE和TOKEN，请检查设置')
+  message("获取不到游戏必须得COOKIE和TOKEN，请检查设置");
 } else {
-  let gameId = ''; // 发指令必须得gameId
+  let gameId = ""; // 发指令必须得gameId
   let deep = 0;
   let todayDiamond = 0;
   let todayLimitDiamond = 0;
@@ -52,33 +58,45 @@ if (!(COOKIE && TOKEN)) {
     todayLimitDiamond = resInfo.userInfo.todayLimitDiamond;
     return Promise.resolve(resInfo);
   }
-  getInfo().then(() => {
-    if (todayDiamond < todayLimitDiamond) {
-      console.log('执行了playgame1')
-      playGame().then(() => {});
-    }else{
-      console.log('没有执行playGame1')
-    }
-  });
+  getInfo()
+    .then(() => {
+      if (todayDiamond < todayLimitDiamond) {
+        console.log("执行了playgame1");
+        playGame()
+          .then(() => {})
+          .catch((e) => {
+            console.log("e1111111error", e);
+          });
+      } else {
+        console.log("没有执行playGame1");
+      }
+    })
+    .catch((e) => {
+      console.log("error======", e);
+    });
 
   // 暂停，避免快速请求以及频繁请求
   async function sleep(delay) {
-    return new Promise(((resolve) => setTimeout(resolve, delay)));
+    return new Promise((resolve) => setTimeout(resolve, delay));
   }
   /**
    * 循环游戏
    */
   async function playGame() {
-    console.log('game start')
+    console.log("game start");
     try {
       // 开始
       const startTime = new Date().getTime();
       const startParams = {
         roleId: 3,
       };
-      const startData = await miningApi.start(startParams, juejinUid, startTime);
+      const startData = await miningApi.start(
+        startParams,
+        juejinUid,
+        startTime
+      );
       await sleep(3000);
-      console.log('startData', startData);
+      console.log("startData", startData);
       gameId = startData.gameId;
       // 发起指令
       const commandTime = +new Date().getTime();
@@ -86,10 +104,15 @@ if (!(COOKIE && TOKEN)) {
         command: firstData.command,
       };
       const xGameId = getXGameId(gameId);
-      const commandData = await miningApi.command(commandParams, juejinUid, commandTime, xGameId);
+      const commandData = await miningApi.command(
+        commandParams,
+        juejinUid,
+        commandTime,
+        xGameId
+      );
       deep = commandData.curPos.y;
       await sleep(3000);
-      console.log('commandData', commandData);
+      console.log("commandData", commandData);
       // 结束
       const overTime = +new Date().getTime();
       const overParams = {
@@ -97,7 +120,7 @@ if (!(COOKIE && TOKEN)) {
       };
       const overData = await miningApi.over(overParams, juejinUid, overTime);
       await sleep(3000);
-      console.log('overData', overData);
+      console.log("overData", overData);
       deep = overData.deep;
       // 更换地图
       const mapTime = +new Date().getTime();
@@ -108,13 +131,15 @@ if (!(COOKIE && TOKEN)) {
       await sleep(3000);
       await getInfo().then((res) => {
         if (todayDiamond < todayLimitDiamond) {
-          playGame()
+          playGame();
         } else {
-          message(`今日限制矿石${res.userInfo.todayLimitDiamond},已获取矿石${res.userInfo.todayDiamond}`)
+          message(
+            `今日限制矿石${res.userInfo.todayLimitDiamond},已获取矿石${res.userInfo.todayDiamond}`
+          );
         }
       });
-    } catch(e) {
-      console.log('game error',e);
+    } catch (e) {
+      console.log("game error", e);
       await sleep(3000);
       // 结束
       const overTime = +new Date().getTime();
@@ -123,15 +148,20 @@ if (!(COOKIE && TOKEN)) {
       };
       await miningApi.over(overParams, juejinUid, overTime);
       await sleep(3000);
-      await getInfo().then((res) => {
-         
-        if (todayDiamond < todayLimitDiamond) {
-           console.log('game start22222')
-          playGame()
-        } else {
-          message(`今日限制矿石${res.userInfo.todayLimitDiamond},已获取矿石${res.userInfo.todayDiamond}`)
-        }
-      });
+      await getInfo()
+        .then((res) => {
+          if (todayDiamond < todayLimitDiamond) {
+            console.log("game start22222");
+            playGame();
+          } else {
+            message(
+              `今日限制矿石${res.userInfo.todayLimitDiamond},已获取矿石${res.userInfo.todayDiamond}`
+            );
+          }
+        })
+        .catch((e) => {
+          console.log("error===============", e);
+        });
     }
   }
   function getXGameId(id) {
@@ -154,12 +184,3 @@ if (!(COOKIE && TOKEN)) {
     );
   }
 }
-
-
-
-
-
-
-
-
-
