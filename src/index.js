@@ -41,6 +41,7 @@ let juejinUid = "";
 if (!(COOKIE && TOKEN)) {
   message("获取不到游戏必须得COOKIE和TOKEN，请检查设置");
 } else {
+  console.log('开始执行playGames')
   let gameId = ""; // 发指令必须得gameId
   let deep = 0;
   let todayDiamond = 0;
@@ -52,6 +53,7 @@ if (!(COOKIE && TOKEN)) {
     juejinUid = userInfo.user_id;
 
     const resInfo = await miningApi.getInfo(juejinUid, time);
+    console.log('resInfo==',resInfo)
     deep = resInfo.gameInfo ? resInfo.gameInfo.deep : 0;
     gameId = resInfo.gameInfo ? resInfo.gameInfo.gameId : 0;
     todayDiamond = resInfo.userInfo.todayDiamond;
@@ -72,7 +74,7 @@ if (!(COOKIE && TOKEN)) {
       }
     })
     .catch((e) => {
-      console.log("error======", e);
+      console.log("error======123", e);
     });
 
   // 暂停，避免快速请求以及频繁请求
