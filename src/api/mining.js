@@ -1,15 +1,15 @@
 /**
  * Created by huangqihong on 2022/1/8.
  */
-const request = require('../utils/request');
-const { TOKEN, COOKIE } =  require('../utils/config.js');
+const request = require("../utils/request");
+const { TOKEN, COOKIE } = require("../utils/config.js");
 
 module.exports = function () {
   return {
     getUser: function () {
       return request({
-        url: 'https://api.juejin.cn/user_api/v1/user/get',
-        method: 'get',
+        url: "https://api.juejin.cn/user_api/v1/user/get",
+        method: "get",
         headers: {
           cookie: COOKIE,
         },
@@ -37,7 +37,7 @@ module.exports = function () {
         url: `https://juejin-game.bytedance.com/game/sea-gold/home/info?uid=${uid}&time=${time}`,
         method: "get",
         headers: {
-          'authorization': TOKEN,
+          authorization: TOKEN,
         },
       });
     },
@@ -113,6 +113,32 @@ module.exports = function () {
           authorization: TOKEN,
         },
       });
-    }
-  }
+    },
+    /**
+     * 
+    获取bug列表的接口
+     */
+    getNotCollect: function (uid, time) {
+      return request({
+        url: `https://api.juejin.cn/user_api/v1/bugfix/not_collect?aid=2608&uuid=${uid}&spider=0`,
+        method: "post",
+        headers: {
+          cookie: COOKIE,
+        },
+      });
+    },
+    /*
+    收取bug的接口
+    */
+    finallyNotCollect: function (uid, data, time) {
+      return request({
+        url: `https://api.juejin.cn/user_api/v1/bugfix/collect?aid=2608&uuid=${uid}&spider=0`,
+        method: "post",
+        headers: {
+          cookie: COOKIE,
+        },
+        data,
+      });
+    },
+  };
 };

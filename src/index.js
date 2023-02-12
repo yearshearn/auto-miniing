@@ -10,11 +10,25 @@ const jueJinApi = require("./api/juejin")();
 const miningApi = require("./api/mining")();
 const jwt = require("jsonwebtoken");
 const firstData = require("./utils/first");
-
+function getNotCollect(uid) {
+  miningApi.getNotCollect(uid).then((res) => {
+    console.log("需要收集的bugList", res);
+    for (let i = 0; i < res.length; i++) {
+      const data = {
+        bug_time: res[i].bug_time,
+        bug_type: res[i].bug_type,
+      };
+      miningApi.finallyNotCollect(uid, data).then((item) => {
+        console.log("bug收集", item);
+      });
+    }
+  });
+}
 if (!COOKIE) {
   message("获取不到cookie，请检查设置");
 } else {
   async function junJin() {
+    getNotCollect();
     try {
       // 先执行签到、抽奖以及沾喜
       await jueJinApi.checkIn(); // 抽奖一次
@@ -41,7 +55,8 @@ let juejinUid = "";
 if (!(COOKIE && TOKEN)) {
   message("获取不到游戏必须得COOKIE和TOKEN，请检查设置");
 } else {
-  console.log('开始执行playGames')
+  return;
+  console.log("开始执行playGames");
   let gameId = ""; // 发指令必须得gameId
   let deep = 0;
   let todayDiamond = 0;
@@ -53,7 +68,7 @@ if (!(COOKIE && TOKEN)) {
     juejinUid = userInfo.user_id;
 
     const resInfo = await miningApi.getInfo(juejinUid, time);
-    console.log('resInfo==',resInfo)
+    console.log("resInfo==", resInfo);
     deep = resInfo.gameInfo ? resInfo.gameInfo.deep : 0;
     gameId = resInfo.gameInfo ? resInfo.gameInfo.gameId : 0;
     todayDiamond = resInfo.userInfo.todayDiamond;
