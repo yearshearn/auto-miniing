@@ -27,8 +27,10 @@
 
 ### 6.消息通知
 
-#### server酱
+#### server酱   
 
 点击【Setting】、【Secrets】、【New repository secret】，添加SERVERID的名称和值即可
 
 ![image-20220111131800050](./static/img/6.png)
+
+
