@@ -28,7 +28,8 @@ if (!COOKIE) {
   message("获取不到cookie，请检查设置");
 } else {
   async function junJin() {
-    getNotCollect();
+    // bugs收集下线了，注释
+//     getNotCollect();
     try {
       // 先执行签到、抽奖以及沾喜
       await jueJinApi.checkIn(); // 抽奖一次
