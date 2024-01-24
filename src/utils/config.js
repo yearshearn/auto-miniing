@@ -6,5 +6,5 @@ module.exports = {
   TOKEN:
     process.env.TOKEN ||
     "__tea_cookie_tokens_2608=%257B%2522web_id%2522%253A%25227230988136892909094%2522%252C%2522user_unique_id%2522%253A%25227230988136892909094%2522%252C%2522timestamp%2522%253A1683595641164%257D; passport_csrf_token=572e26a80e6d6dfd6",
-  SERVERID:"SCT129369T97UVCl0uaJrlNX1RQ0jMdRzJ", //    server酱`
+  SERVERID:"SCT129369T97UVCl0uaJrlNX1RQ0jMdRzJ", //     server酱`
 };
